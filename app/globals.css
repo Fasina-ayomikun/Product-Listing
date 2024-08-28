@@ -1,0 +1,36 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  background-color: #10002b;
+  margin: 0;
+  overflow-x: hidden;
+}
+
+.hero-image {
+  background: linear-gradient(#10002b88, rgba(0, 0, 0, 0)), url('/assets/hero.jpg') no-repeat center/cover;
+  height: 100vh;
+}
+
+.flex-between {
+  @apply flex items-center justify-between
+}
+
+.category-list {
+  @apply cursor-pointer bg-purple-100 bg-opacity-20 px-3 py-1 text-sm text-pink-200 rounded-full
+}
+
+.container {
+  @apply max-w-6xl mx-auto
+}
+
+.input-class {
+  @apply bg-transparent ring-2 ring-purple-100 rounded-sm px-4 py-2 w-full outline-none placeholder:text-purple-100 text-purple-100 text-sm focus:ring-purple-400
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
