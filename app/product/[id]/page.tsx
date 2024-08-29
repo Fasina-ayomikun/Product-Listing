@@ -1,6 +1,8 @@
 "use client";
-import CreateProductModal from "@/app/components/CreateProductModal";
-import { Data } from "@/app/utils/constants";
+import CreateProductModal from "@/components/CreateProductModal";
+import Header from "@/components/Header";
+import { Data } from "@/utils/constants";
+import { getProductsList } from "@/utils/functions";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
@@ -11,8 +13,7 @@ const SingleProduct = ({ params }: { params: { id: string } }) => {
   const navigate = useRouter();
   const pathname = usePathname();
   const { id } = params;
-  let rawProducts = localStorage.getItem("PRODUCT_LISTS");
-  let products: Data[] = rawProducts ? JSON.parse(rawProducts) : [];
+  let products: Data[] = getProductsList();
 
   const product = products.filter((product) => product.id === id);
   const handleDelete = () => {
@@ -31,19 +32,7 @@ const SingleProduct = ({ params }: { params: { id: string } }) => {
   }
   return (
     <section className='relative'>
-      <header className='flex items-center justify-between gap-4 px-6 container py-4 '>
-        <Link href={"/"} className='text-pink-200'>
-          Product Listing
-        </Link>
-        <p
-          onClick={() => {
-            navigate.push(`${pathname}?open=true`);
-          }}
-          className='cursor-pointer text-pink-200'
-        >
-          Create Product
-        </p>
-      </header>
+      <Header />
 
       <section className='grid grid-cols-1 lg:grid-cols-2 items-start my-14 gap-9 container'>
         <div className='relative w-full h-full min-h-96 max-h-4xl'>

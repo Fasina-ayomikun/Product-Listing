@@ -2,7 +2,8 @@ import { randomBytes, randomUUID } from "crypto";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useState } from "react";
-import { Data } from "../utils/constants";
+import { Data, initialData } from "../utils/constants";
+import { getProductsList } from "../utils/functions";
 
 const CreateProductModal = ({
   isEditing,
@@ -13,16 +14,10 @@ const CreateProductModal = ({
   id: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-  const initialData = {
-    name: "",
-    desc: "",
-    price: 0,
-    image: "",
-    category: "all",
-  };
   const [data, setData] = useState(initialData);
   const open = useSearchParams().get("open");
   const navigate = useRouter();
+  let products: Data[] = getProductsList();
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -50,9 +45,6 @@ const CreateProductModal = ({
     };
     reader.readAsDataURL(file);
   };
-  let rawProducts = localStorage.getItem("PRODUCT_LISTS");
-  let products: Data[] = rawProducts ? JSON.parse(rawProducts) : [];
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (isEditing) {
@@ -63,7 +55,6 @@ const CreateProductModal = ({
         id,
       };
       products.push(...tempProducts, newData);
-      console.log(products);
       localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
 
       setIsEditing(false);
@@ -74,7 +65,6 @@ const CreateProductModal = ({
       localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
       setData(initialData);
     }
-    console.log(products);
     navigate.back();
   };
   useEffect(() => {

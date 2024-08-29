@@ -35,3 +35,10 @@ export const defaultProducts: Data[] = [
     id: "395beb7f4b16a6848bac4a6fdc0570a70ad787e2ae94649fc6f6176796530fa04624a0d831fbffff880db47bf0286216",
   },
 ];
+export const initialData = {
+  name: "",
+  desc: "",
+  price: 0,
+  image: "",
+  category: "all",
+};
