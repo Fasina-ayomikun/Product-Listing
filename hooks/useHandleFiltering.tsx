@@ -1,16 +1,15 @@
 import { Data } from "@/utils/constants";
 import { getProductsList } from "@/utils/functions";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 const useHandleFiltering = () => {
   const [category, setCategory] = useState("all");
   const [price, setPrice] = useState(100);
   const [filteredProducts, setFilteredProducts] = useState<Data[]>([]);
 
-  let products = getProductsList();
   const handleFiltering = () => {
+    let products = getProductsList();
     let tempProducts = [...products];
-
     if (category !== "all") {
       tempProducts = tempProducts.filter(
         (product) => product.category.toLowerCase() === category.toLowerCase()
@@ -28,6 +27,7 @@ const useHandleFiltering = () => {
     setPrice,
     category,
     price,
+    setFilteredProducts,
   };
 };
 

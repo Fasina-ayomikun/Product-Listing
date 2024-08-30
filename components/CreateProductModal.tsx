@@ -1,23 +1,27 @@
 import { randomBytes, randomUUID } from "crypto";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Data, initialData } from "../utils/constants";
 import { getProductsList } from "../utils/functions";
+import { useUploadImage } from "@/hooks/useUploadingImage";
 
 const CreateProductModal = ({
   isEditing,
   id,
   setIsEditing,
 }: {
-  isEditing?: boolean;
+  isEditing: boolean;
   id: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
   const [data, setData] = useState(initialData);
+  const [file, setFile] = useState<File | null>(null);
   const open = useSearchParams().get("open");
   const navigate = useRouter();
+  const { uploadImage, isUploadingImage } = useUploadImage();
   let products: Data[] = getProductsList();
+  const fileRef: React.MutableRefObject<null | HTMLInputElement> = useRef(null);
   const handleChange = (
     e: React.ChangeEvent<
       HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement
@@ -34,7 +38,7 @@ const CreateProductModal = ({
     if (!files) return;
     const file = files[0];
     const reader = new FileReader();
-
+    setFile(file);
     reader.onload = () => {
       setData((prevData) => {
         return { ...prevData, image: reader.result as string };
@@ -50,20 +54,48 @@ const CreateProductModal = ({
     if (isEditing) {
       const tempProducts = products.filter((product) => product.id !== id);
       products.splice(0, products.length);
-      const newData = {
+      let newData = {} as Data;
+
+      if (file) {
+        uploadImage(file, {
+          onSuccess: (image) => {
+            console.log(image, "ooo");
+
+            newData = {
+              ...data,
+              image,
+              id,
+            };
+            products.push(...tempProducts, newData);
+            localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+          },
+        });
+        return;
+      }
+      newData = {
         ...data,
         id,
       };
       products.push(...tempProducts, newData);
       localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
-
-      setIsEditing(false);
-      setData(initialData);
     } else {
-      products.push({ ...data, id: randomBytes(32).toString("hex") });
+      uploadImage(file, {
+        onSuccess: (image) => {
+          products.push({
+            ...data,
+            id: randomBytes(32).toString("hex"),
+            image,
+          });
 
-      localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
-      setData(initialData);
+          localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+        },
+      });
+    }
+    setIsEditing(false);
+    setData(initialData);
+    setFile(null);
+    if (fileRef.current) {
+      fileRef.current.value = "";
     }
     navigate.back();
   };
@@ -93,7 +125,9 @@ const CreateProductModal = ({
             <input
               type='file'
               name='image'
+              required={!isEditing}
               id='image'
+              ref={fileRef}
               onChange={handleFileChange}
               className='ml-3 outline-none'
             />
@@ -139,27 +173,47 @@ const CreateProductModal = ({
             required
             name='category'
             value={data.category}
-            className='input-class'
+            className='input-class '
           >
-            <option value='all'>Category</option>
-            <option value='electronics'>Electronics</option>
-            <option value='jewelry'>Jewelry</option>
-            <option value='footwear'>Footwear</option>
+            <option value='all' className='bg-purple-800 '>
+              Category
+            </option>
+            <option value='electronics' className='bg-purple-800'>
+              Electronics
+            </option>
+            <option value='jewelry' className='bg-purple-800'>
+              Jewelry
+            </option>
+            <option value='footwear' className='bg-purple-800'>
+              Footwear
+            </option>
+            <option value='cream' className='bg-purple-800'>
+              Cream
+            </option>
+            <option value='cloth' className='bg-purple-800'>
+              Cloth
+            </option>
           </select>
           <div className='flex items-center justify-center gap-3 w-full my-4'>
             <button
               type='button'
               className='bg-gray-300 px-7 py-1 rounded-md text-gray-600'
               onClick={() => {
+                if (fileRef.current) {
+                  fileRef.current.value = "";
+                }
                 navigate.back();
                 setIsEditing(false);
                 setData(initialData);
+
+                setFile(null);
               }}
             >
               Cancel
             </button>
             <button
               type='submit'
+              disabled={isUploadingImage}
               className='bg-purple-500 px-7 py-1 rounded-md text-pink-200'
             >
               {isEditing ? "Save" : "Create"}

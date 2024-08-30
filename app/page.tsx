@@ -1,12 +1,13 @@
 "use client";
 import CreateProductModal from "../components/CreateProductModal";
 import { defaultProducts } from "../utils/constants";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Hero from "@/components/Hero";
 import Filters from "@/components/Filters";
 import SingleProduct from "@/components/SingleProduct";
 import useHandleFiltering from "@/hooks/useHandleFiltering";
+import { getProductsList } from "@/utils/functions";
 
 export default function Home() {
   const {
@@ -16,6 +17,7 @@ export default function Home() {
     setPrice,
     category,
     price,
+    setFilteredProducts,
   } = useHandleFiltering();
   useEffect(() => {
     handleFiltering();
@@ -24,6 +26,8 @@ export default function Home() {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
       if (alreadySet) {
+        const products = getProductsList();
+        setFilteredProducts(products);
         return;
       } else {
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
@@ -52,7 +56,7 @@ export default function Home() {
           })
         )}
       </section>
-      <CreateProductModal id='' setIsEditing={() => {}} />
+      <CreateProductModal isEditing={false} id={""} setIsEditing={() => {}} />
     </section>
   );
 }

@@ -9,12 +9,12 @@
 }
 
 .hero-image {
-  background: linear-gradient(#10002b88, rgba(0, 0, 0, 0)), url('/assets/hero.jpg') no-repeat center/cover;
+  background: radial-gradient(#06000fcc, #020005d8), url('/assets/hero.jpg') no-repeat center/cover;
   height: 100vh;
 }
 
 .flex-between {
-  @apply flex items-center justify-between
+  @apply flex items-center md:justify-between justify-start flex-wrap
 }
 
 .category-list {
