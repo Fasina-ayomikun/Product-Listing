@@ -1,4 +1,4 @@
-import { randomBytes, randomUUID } from "crypto";
+import { randomBytes } from "crypto";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";

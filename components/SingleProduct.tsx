@@ -1,5 +1,4 @@
 import { Data } from "@/utils/constants";
-import { handleDelete } from "@/utils/functions";
 import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import React, { useState } from "react";
