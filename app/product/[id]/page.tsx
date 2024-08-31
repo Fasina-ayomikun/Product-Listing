@@ -16,7 +16,6 @@ const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
   const pathname = usePathname();
   const { id } = params;
   const { products, updateProductsList } = useGetProductsList();
-  console.log(products, "oo");
   const handleDelete = (id: string) => {
     const tempProducts = products.filter((product: Data) => product.id !== id);
     products.splice(0, products.length);

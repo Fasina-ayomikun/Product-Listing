@@ -25,7 +25,6 @@ const CreateProductModal = ({
   const navigate = useRouter();
   const { uploadImage, isUploadingImage } = useUploadImage();
   const { products, updateProductsList } = useGetProductsList();
-  console.log(products, "jjj");
 
   const fileRef: React.MutableRefObject<null | HTMLInputElement> = useRef(null);
   const handleChange = (
@@ -57,7 +56,6 @@ const CreateProductModal = ({
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log(isEditing);
 
     if (isEditing) {
       const tempProducts = products.filter((product) => product.id !== id);
@@ -66,8 +64,6 @@ const CreateProductModal = ({
       if (file) {
         uploadImage(file, {
           onSuccess: (image) => {
-            console.log(image, "ooo");
-
             newData = {
               ...data,
               image,
@@ -75,21 +71,38 @@ const CreateProductModal = ({
             };
             const newProducts = [...tempProducts, newData];
             updateProductsList(newProducts);
+            if (image) {
+              setOpen(false);
+              window.location.reload();
+              setIsEditing(false);
+              setData(initialData);
+              setFile(null);
+              if (fileRef.current) {
+                fileRef.current.value = "";
+              }
+            }
           },
         });
-        return;
+      } else {
+        newData = {
+          ...data,
+          id,
+        };
+        const newProducts = [...tempProducts, newData];
+        updateProductsList(newProducts);
+
+        setIsEditing(false);
+        setData(initialData);
+        setFile(null);
+        if (fileRef.current) {
+          fileRef.current.value = "";
+        }
+        setOpen(false);
+        window.location.reload();
       }
-      newData = {
-        ...data,
-        id,
-      };
-      const newProducts = [...tempProducts, newData];
-      updateProductsList(newProducts);
     } else {
       uploadImage(file, {
         onSuccess: (image) => {
-          console.log(image);
-
           const newProducts = [
             ...products,
             {
@@ -98,20 +111,21 @@ const CreateProductModal = ({
               image,
             },
           ];
-          console.log(newProducts);
 
           updateProductsList(newProducts);
+          if (image) {
+            setIsEditing(false);
+            setData(initialData);
+            setFile(null);
+            if (fileRef.current) {
+              fileRef.current.value = "";
+            }
+            setOpen(false);
+            window.location.reload();
+          }
         },
       });
     }
-    setIsEditing(false);
-    setData(initialData);
-    setFile(null);
-    if (fileRef.current) {
-      fileRef.current.value = "";
-    }
-    setOpen(false);
-    window.location.reload();
   };
   useEffect(() => {
     if (isEditing) {
