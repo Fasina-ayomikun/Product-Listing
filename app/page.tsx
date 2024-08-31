@@ -7,7 +7,7 @@ import Hero from "@/components/Hero";
 import Filters from "@/components/Filters";
 import SingleProduct from "@/components/SingleProduct";
 import useHandleFiltering from "@/hooks/useHandleFiltering";
-import { getProductsList } from "@/utils/functions";
+import useGetProductsList from "@/hooks/useGetProductsList";
 
 export default function Home() {
   const {
@@ -26,7 +26,7 @@ export default function Home() {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
       if (alreadySet) {
-        const products = getProductsList();
+        let products = JSON.parse(alreadySet);
         setFilteredProducts(products);
         return;
       } else {

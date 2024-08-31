@@ -1,5 +1,5 @@
+import useGetProductsList from "@/hooks/useGetProductsList";
 import { Data } from "@/utils/constants";
-import { getProductsList } from "@/utils/functions";
 import React from "react";
 
 const Filters = ({
@@ -9,7 +9,7 @@ const Filters = ({
   setCategory: React.Dispatch<React.SetStateAction<string>>;
   setPrice: React.Dispatch<React.SetStateAction<number>>;
 }) => {
-  const products = getProductsList();
+  const { products } = useGetProductsList();
   const categories: string[] = Array.from(
     new Set(products.map((product: Data) => product.category))
   );

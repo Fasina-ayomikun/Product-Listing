@@ -3,8 +3,8 @@ import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useRef, useState } from "react";
 import { Data, initialData } from "../utils/constants";
-import { getProductsList } from "../utils/functions";
 import { useUploadImage } from "@/hooks/useUploadingImage";
+import useGetProductsList from "@/hooks/useGetProductsList";
 
 const CreateProductModal = ({
   isEditing,
@@ -20,7 +20,7 @@ const CreateProductModal = ({
   const open = useSearchParams().get("open");
   const navigate = useRouter();
   const { uploadImage, isUploadingImage } = useUploadImage();
-  let products: Data[] = getProductsList();
+  let { products } = useGetProductsList();
   const fileRef: React.MutableRefObject<null | HTMLInputElement> = useRef(null);
   const handleChange = (
     e: React.ChangeEvent<

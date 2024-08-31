@@ -1,14 +1,13 @@
 import { Data } from "@/utils/constants";
-import { getProductsList } from "@/utils/functions";
 import React, { useEffect, useState } from "react";
+import useGetProductsList from "./useGetProductsList";
 
 const useHandleFiltering = () => {
   const [category, setCategory] = useState("all");
   const [price, setPrice] = useState(100);
   const [filteredProducts, setFilteredProducts] = useState<Data[]>([]);
-
+  const { products } = useGetProductsList();
   const handleFiltering = () => {
-    let products = getProductsList();
     let tempProducts = [...products];
     if (category !== "all") {
       tempProducts = tempProducts.filter(
