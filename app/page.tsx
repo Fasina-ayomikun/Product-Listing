@@ -11,6 +11,7 @@ import useGetProductsList from "@/hooks/useGetProductsList";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
   const {
     handleFiltering,
     filteredProducts,
@@ -21,23 +22,28 @@ export default function Home() {
     setFilteredProducts,
   } = useHandleFiltering();
 
-  const { products } = useGetProductsList();
+  const { products: o } = useGetProductsList();
   useEffect(() => {
-    setFilteredProducts(products);
     handleFiltering();
-  }, [category, price, setFilteredProducts]);
+  }, [category, price]);
   useEffect(() => {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
+      console.log(alreadySet);
+
       if (alreadySet) {
         let products = JSON.parse(alreadySet);
+        console.log(o, products);
         setFilteredProducts(products);
-        return;
+        setUpdate(false);
       } else {
+        console.log("dame");
+
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
+        setUpdate(true);
       }
     }
-  }, []);
+  }, [update]);
   return (
     <Suspense fallback={<p>Loading..</p>}>
       <section className='relative'>
