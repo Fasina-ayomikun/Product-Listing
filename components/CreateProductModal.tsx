@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useEffect, useRef, useState } from "react";
+import React, { Suspense, useEffect, useRef, useState } from "react";
 import { Data, initialData } from "../utils/constants";
 import { useUploadImage } from "@/hooks/useUploadingImage";
 import useGetProductsList from "@/hooks/useGetProductsList";
@@ -107,121 +107,123 @@ const CreateProductModal = ({
     }
   }, [isEditing, id]);
   return (
-    <section
-      className={`fixed z-10 top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black bg-opacity-85  items-center justify-center ${
-        open ? "flex" : "hidden"
-      }`}
-    >
-      <div className='max-w-2xl w-11/12 min-h-3/4 h-5/6 overflow-y-auto rounded-md bg-purple-800 ring-4 ring-purple-100 px-7 py-6'>
-        <h3 className='text-xl text-center font-semibold capitalize  text-purple-100 pb-8'>
-          {isEditing ? "Edit" : "Add new"} product
-        </h3>
-        <form
-          onSubmit={handleSubmit}
-          className='flex flex-col items-start gap-5'
-        >
-          <label htmlFor='image' className='text-purple-100 font-medium '>
-            Product Image:
-            <input
-              type='file'
-              name='image'
-              required={!isEditing}
-              id='image'
-              ref={fileRef}
-              onChange={handleFileChange}
-              className='ml-3 outline-none'
-            />
-          </label>
-          {data.image && (
-            <Image
-              src={data.image}
-              alt='product'
-              width={300}
-              height={300}
-              objectFit='cover'
-              objectPosition='center'
-            />
-          )}
-          <input
-            onChange={handleChange}
-            type='text'
-            required
-            name='name'
-            value={data.name}
-            placeholder='Product Name'
-            className='input-class'
-          />
-          <textarea
-            onChange={handleChange}
-            value={data.desc}
-            placeholder='Product description'
-            required
-            name='desc'
-            className='input-class'
-          />
-          <input
-            onChange={handleChange}
-            type='number'
-            name='price'
-            value={data.price}
-            required
-            placeholder='Product price'
-            className='input-class'
-          />
-          <select
-            onChange={handleChange}
-            required
-            name='category'
-            value={data.category}
-            className='input-class '
+    <Suspense>
+      <section
+        className={`fixed z-10 top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black bg-opacity-85  items-center justify-center ${
+          open ? "flex" : "hidden"
+        }`}
+      >
+        <div className='max-w-2xl w-11/12 min-h-3/4 h-5/6 overflow-y-auto rounded-md bg-purple-800 ring-4 ring-purple-100 px-7 py-6'>
+          <h3 className='text-xl text-center font-semibold capitalize  text-purple-100 pb-8'>
+            {isEditing ? "Edit" : "Add new"} product
+          </h3>
+          <form
+            onSubmit={handleSubmit}
+            className='flex flex-col items-start gap-5'
           >
-            <option value='all' className='bg-purple-800 '>
-              Category
-            </option>
-            <option value='electronics' className='bg-purple-800'>
-              Electronics
-            </option>
-            <option value='jewelry' className='bg-purple-800'>
-              Jewelry
-            </option>
-            <option value='footwear' className='bg-purple-800'>
-              Footwear
-            </option>
-            <option value='cream' className='bg-purple-800'>
-              Cream
-            </option>
-            <option value='cloth' className='bg-purple-800'>
-              Cloth
-            </option>
-          </select>
-          <div className='flex items-center justify-center gap-3 w-full my-4'>
-            <button
-              type='button'
-              className='bg-gray-300 px-7 py-1 rounded-md text-gray-600'
-              onClick={() => {
-                if (fileRef.current) {
-                  fileRef.current.value = "";
-                }
-                navigate.back();
-                setIsEditing(false);
-                setData(initialData);
+            <label htmlFor='image' className='text-purple-100 font-medium '>
+              Product Image:
+              <input
+                type='file'
+                name='image'
+                required={!isEditing}
+                id='image'
+                ref={fileRef}
+                onChange={handleFileChange}
+                className='ml-3 outline-none'
+              />
+            </label>
+            {data.image && (
+              <Image
+                src={data.image}
+                alt='product'
+                width={300}
+                height={300}
+                objectFit='cover'
+                objectPosition='center'
+              />
+            )}
+            <input
+              onChange={handleChange}
+              type='text'
+              required
+              name='name'
+              value={data.name}
+              placeholder='Product Name'
+              className='input-class'
+            />
+            <textarea
+              onChange={handleChange}
+              value={data.desc}
+              placeholder='Product description'
+              required
+              name='desc'
+              className='input-class'
+            />
+            <input
+              onChange={handleChange}
+              type='number'
+              name='price'
+              value={data.price}
+              required
+              placeholder='Product price'
+              className='input-class'
+            />
+            <select
+              onChange={handleChange}
+              required
+              name='category'
+              value={data.category}
+              className='input-class '
+            >
+              <option value='all' className='bg-purple-800 '>
+                Category
+              </option>
+              <option value='electronics' className='bg-purple-800'>
+                Electronics
+              </option>
+              <option value='jewelry' className='bg-purple-800'>
+                Jewelry
+              </option>
+              <option value='footwear' className='bg-purple-800'>
+                Footwear
+              </option>
+              <option value='cream' className='bg-purple-800'>
+                Cream
+              </option>
+              <option value='cloth' className='bg-purple-800'>
+                Cloth
+              </option>
+            </select>
+            <div className='flex items-center justify-center gap-3 w-full my-4'>
+              <button
+                type='button'
+                className='bg-gray-300 px-7 py-1 rounded-md text-gray-600'
+                onClick={() => {
+                  if (fileRef.current) {
+                    fileRef.current.value = "";
+                  }
+                  navigate.back();
+                  setIsEditing(false);
+                  setData(initialData);
 
-                setFile(null);
-              }}
-            >
-              Cancel
-            </button>
-            <button
-              type='submit'
-              disabled={isUploadingImage}
-              className='bg-purple-500 px-7 py-1 rounded-md text-pink-200'
-            >
-              {isEditing ? "Save" : "Create"}
-            </button>
-          </div>
-        </form>
-      </div>
-    </section>
+                  setFile(null);
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                type='submit'
+                disabled={isUploadingImage}
+                className='bg-purple-500 px-7 py-1 rounded-md text-pink-200'
+              >
+                {isEditing ? "Save" : "Create"}
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+    </Suspense>
   );
 };
 

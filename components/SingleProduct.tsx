@@ -1,7 +1,7 @@
 import { Data } from "@/utils/constants";
 import Image from "next/image";
-import { usePathname, useRouter } from "next/navigation";
-import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+import React from "react";
 
 const SingleProduct = ({ product }: { product: Data }) => {
   const navigate = useRouter();

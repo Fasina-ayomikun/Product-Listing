@@ -1,13 +1,12 @@
 "use client";
 import CreateProductModal from "../components/CreateProductModal";
 import { defaultProducts } from "../utils/constants";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Header from "../components/Header";
 import Hero from "@/components/Hero";
 import Filters from "@/components/Filters";
 import SingleProduct from "@/components/SingleProduct";
 import useHandleFiltering from "@/hooks/useHandleFiltering";
-import useGetProductsList from "@/hooks/useGetProductsList";
 
 export default function Home() {
   const {

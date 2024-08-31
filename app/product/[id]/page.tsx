@@ -6,7 +6,7 @@ import { Data } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import React, { useEffect, useState } from "react";
+import React, { Suspense, useState } from "react";
 
 const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -30,67 +30,71 @@ const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
     navigate.back();
   }
   return (
-    <section className='relative'>
-      <Header />
-      <div className='container'>
-        <Link href={"/"} className='text-pink-200 container px-6'>
-          Go Back
-        </Link>
-      </div>
-      <section className='grid grid-cols-1 lg:grid-cols-2 items-start my-14 gap-9 container px-4'>
-        <div className='relative w-full h-full min-h-96 max-h-4xl'>
-          <Image
-            src={product[0]?.image}
-            alt='product'
-            fill
-            objectFit='cover '
-            objectPosition='center'
-          />
+    <Suspense fallback={<p>Loading...</p>}>
+      <section className='relative'>
+        <Header />
+        <div className='container'>
+          <Link href={"/"} className='text-pink-200 container px-6'>
+            Go Back
+          </Link>
         </div>
-        <div>
-          <h1 className='text-4xl uppercase font-semibold flex  items-start justify-between flex-wrap-reverse text-pink-200 gap-4'>
-            {product[0]?.name}
-            <span className='text-xs cursor-pointer capitalize flex items-center font-normal gap-3 justify-end  w-full'>
-              <span
-                className='text-green-500'
-                onClick={() => {
-                  navigate.push(`${pathname}/?open=true`);
-                  setIsEditing(true);
-                }}
-              >
-                Edit
-              </span>
-              <span
-                className='text-red-500'
-                onClick={() => {
-                  handleDelete(id);
+        <section className='grid grid-cols-1 lg:grid-cols-2 items-start my-14 gap-9 container px-4'>
+          <div className='relative w-full h-full min-h-96 max-h-4xl'>
+            <Image
+              src={product[0]?.image}
+              alt='product'
+              fill
+              objectFit='cover '
+              objectPosition='center'
+            />
+          </div>
+          <div>
+            <h1 className='text-4xl uppercase font-semibold flex  items-start justify-between flex-wrap-reverse text-pink-200 gap-4'>
+              {product[0]?.name}
+              <span className='text-xs cursor-pointer capitalize flex items-center font-normal gap-3 justify-end  w-full'>
+                <span
+                  className='text-green-500'
+                  onClick={() => {
+                    navigate.push(`${pathname}/?open=true`);
+                    setIsEditing(true);
+                  }}
+                >
+                  Edit
+                </span>
+                <span
+                  className='text-red-500'
+                  onClick={() => {
+                    handleDelete(id);
 
-                  navigate.push("/");
-                }}
-              >
-                Delete
+                    navigate.push("/");
+                  }}
+                >
+                  Delete
+                </span>
               </span>
-            </span>
-          </h1>
-          <hr className='my-3' />
-          <div className='px-3 flex items-center justify-between gap-4'>
-            <p className='text-md text-purple-100 '>
-              Price: ${product[0]?.price}
-            </p>
-            <p className='text-md text-purple-100 '>
-              Category: {product[0]?.category}
+            </h1>
+            <hr className='my-3' />
+            <div className='px-3 flex items-center justify-between gap-4'>
+              <p className='text-md text-purple-100 '>
+                Price: ${product[0]?.price}
+              </p>
+              <p className='text-md text-purple-100 '>
+                Category: {product[0]?.category}
+              </p>
+            </div>
+            <hr className='my-3' />
+            <p className='text-xs leading-6 text-pink-200'>
+              {product[0]?.desc}
             </p>
           </div>
-          <hr className='my-3' />
-          <p className='text-xs leading-6 text-pink-200'>{product[0]?.desc}</p>
-        </div>
+        </section>
+        <CreateProductModal
+          setIsEditing={setIsEditing}
+          isEditing={isEditing}
+          id={id}
+        />
       </section>
-      <CreateProductModal
-        setIsEditing={setIsEditing}
-        isEditing={isEditing}
-        id={id}
-      />
-    </section>
+    </Suspense>
   );
 };
 
