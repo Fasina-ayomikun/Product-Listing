@@ -22,23 +22,18 @@ export default function Home() {
     setFilteredProducts,
   } = useHandleFiltering();
 
-  const { products: o } = useGetProductsList();
   useEffect(() => {
     handleFiltering();
   }, [category, price]);
   useEffect(() => {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
-      console.log(alreadySet);
 
       if (alreadySet) {
         let products = JSON.parse(alreadySet);
-        console.log(o, products);
         setFilteredProducts(products);
         setUpdate(false);
       } else {
-        console.log("dame");
-
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
         setUpdate(true);
       }
