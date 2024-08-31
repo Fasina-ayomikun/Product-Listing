@@ -22,9 +22,11 @@ export default function Home() {
     setFilteredProducts,
   } = useHandleFiltering();
 
+  const { products } = useGetProductsList();
   useEffect(() => {
     handleFiltering();
-  }, [category, price]);
+    setFilteredProducts(products);
+  }, [category, price, setFilteredProducts]);
   useEffect(() => {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
