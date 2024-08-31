@@ -33,14 +33,12 @@ export default function Home() {
       if (alreadySet) {
         let products = JSON.parse(alreadySet);
         setFilteredProducts(products);
-        setProducts(products);
-        setUpdate(false);
       } else {
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
-        setUpdate(true);
+        window.location.reload();
       }
     }
-  }, [update]);
+  }, []);
   return (
     <Suspense fallback={<p>Loading..</p>}>
       <section className='relative'>
