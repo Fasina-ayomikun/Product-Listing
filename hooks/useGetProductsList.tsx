@@ -8,6 +8,7 @@ const useGetProductsList = () => {
     if (window !== undefined) {
       let rawProducts = localStorage.getItem("PRODUCT_LISTS");
       let products = rawProducts ? JSON.parse(rawProducts) : [];
+      console.log("products", products);
 
       setProducts((prev) => {
         return [...products];
