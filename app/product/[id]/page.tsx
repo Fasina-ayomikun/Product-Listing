@@ -30,13 +30,9 @@ const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
 
   useEffect(() => {
     const singleProduct = products.filter((product) => product.id === id);
-    console.log(singleProduct, products);
 
     setProduct(singleProduct);
   }, [products]);
-  useEffect(() => {
-    console.log("Page", products);
-  }, [products, open]);
 
   if (!id) {
     navigate.back();
