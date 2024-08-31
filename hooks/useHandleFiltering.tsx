@@ -8,6 +8,8 @@ const useHandleFiltering = () => {
   const [filteredProducts, setFilteredProducts] = useState<Data[]>([]);
   const { products } = useGetProductsList();
   const handleFiltering = () => {
+    console.log(products, filteredProducts);
+
     let tempProducts = [...products];
     if (category !== "all") {
       tempProducts = tempProducts.filter(

@@ -7,12 +7,10 @@ const useGetProductsList = () => {
   useEffect(() => {
     if (window !== undefined) {
       const getProductsList = () => {
-        if (window !== undefined) {
-          let rawProducts = localStorage.getItem("PRODUCT_LISTS");
-          let products = rawProducts ? JSON.parse(rawProducts) : [];
+        let rawProducts = localStorage.getItem("PRODUCT_LISTS");
+        let products = rawProducts ? JSON.parse(rawProducts) : [];
 
-          return products;
-        }
+        return products;
       };
       const productsList = getProductsList();
 

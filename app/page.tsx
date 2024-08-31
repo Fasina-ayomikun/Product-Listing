@@ -22,11 +22,10 @@ export default function Home() {
     setFilteredProducts,
   } = useHandleFiltering();
 
-  const { products } = useGetProductsList();
+  const { products, updateProductsList } = useGetProductsList();
   useEffect(() => {
     handleFiltering();
-    setFilteredProducts(products);
-  }, [category, price, setFilteredProducts]);
+  }, [category, price]);
   useEffect(() => {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
@@ -35,6 +34,7 @@ export default function Home() {
         let products = JSON.parse(alreadySet);
         setFilteredProducts(products);
         setUpdate(false);
+        updateProductsList(products);
       } else {
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
         setUpdate(true);
