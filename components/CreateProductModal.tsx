@@ -71,16 +71,6 @@ const CreateProductModal = ({
             };
             const newProducts = [...tempProducts, newData];
             updateProductsList(newProducts);
-            if (image) {
-              setOpen(false);
-              window.location.reload();
-              setIsEditing(false);
-              setData(initialData);
-              setFile(null);
-              if (fileRef.current) {
-                fileRef.current.value = "";
-              }
-            }
           },
         });
       } else {
@@ -90,15 +80,6 @@ const CreateProductModal = ({
         };
         const newProducts = [...tempProducts, newData];
         updateProductsList(newProducts);
-
-        setIsEditing(false);
-        setData(initialData);
-        setFile(null);
-        if (fileRef.current) {
-          fileRef.current.value = "";
-        }
-        setOpen(false);
-        window.location.reload();
       }
     } else {
       uploadImage(file, {
@@ -113,18 +94,18 @@ const CreateProductModal = ({
           ];
 
           updateProductsList(newProducts);
-          if (image) {
-            setIsEditing(false);
-            setData(initialData);
-            setFile(null);
-            if (fileRef.current) {
-              fileRef.current.value = "";
-            }
-            setOpen(false);
-            window.location.reload();
-          }
         },
       });
+    }
+    if (!isUploadingImage) {
+      setOpen(false);
+      window.location.reload();
+      setIsEditing(false);
+      setData(initialData);
+      setFile(null);
+      if (fileRef.current) {
+        fileRef.current.value = "";
+      }
     }
   };
   useEffect(() => {
@@ -241,7 +222,7 @@ const CreateProductModal = ({
               disabled={isUploadingImage}
               className='bg-purple-500 px-7 py-1 rounded-md text-pink-200'
             >
-              {isEditing ? "Save" : "Create"}
+              {isUploadingImage ? "Loading..." : isEditing ? "Save" : "Create"}
             </button>
           </div>
         </form>
