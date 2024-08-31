@@ -23,7 +23,7 @@ const CreateProductModal = ({
   const [file, setFile] = useState<File | null>(null);
 
   const navigate = useRouter();
-  const { uploadImage, isUploadingImage } = useUploadImage();
+  const { uploadImage, isUploadingImage, isSuccess } = useUploadImage();
   const { products, updateProductsList } = useGetProductsList();
 
   const fileRef: React.MutableRefObject<null | HTMLInputElement> = useRef(null);
@@ -54,6 +54,19 @@ const CreateProductModal = ({
     };
     reader.readAsDataURL(file);
   };
+  const resetPage = () => {
+    if (!isUploadingImage) {
+      setOpen(false);
+      setIsEditing(false);
+
+      setData(initialData);
+      setFile(null);
+      if (fileRef.current) {
+        fileRef.current.value = "";
+      }
+      window.location.reload();
+    }
+  };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -71,6 +84,7 @@ const CreateProductModal = ({
             };
             const newProducts = [...tempProducts, newData];
             updateProductsList(newProducts);
+            resetPage();
           },
         });
       } else {
@@ -80,8 +94,11 @@ const CreateProductModal = ({
         };
         const newProducts = [...tempProducts, newData];
         updateProductsList(newProducts);
+        resetPage();
       }
     } else {
+      console.log("dam");
+
       uploadImage(file, {
         onSuccess: (image) => {
           const newProducts = [
@@ -94,18 +111,9 @@ const CreateProductModal = ({
           ];
 
           updateProductsList(newProducts);
+          resetPage();
         },
       });
-    }
-    if (!isUploadingImage) {
-      setOpen(false);
-      window.location.reload();
-      setIsEditing(false);
-      setData(initialData);
-      setFile(null);
-      if (fileRef.current) {
-        fileRef.current.value = "";
-      }
     }
   };
   useEffect(() => {
