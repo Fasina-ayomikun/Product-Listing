@@ -6,16 +6,11 @@ const useGetProductsList = () => {
   const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     if (window !== undefined) {
-      const getProductsList = () => {
-        let rawProducts = localStorage.getItem("PRODUCT_LISTS");
-        let products = rawProducts ? JSON.parse(rawProducts) : [];
-
-        return products;
-      };
-      const productsList = getProductsList();
+      let rawProducts = localStorage.getItem("PRODUCT_LISTS");
+      let products = rawProducts ? JSON.parse(rawProducts) : [];
 
       setProducts((prev) => {
-        return [...productsList];
+        return [...products];
       });
     }
   }, []);
