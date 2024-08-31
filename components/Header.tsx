@@ -2,7 +2,11 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import React from "react";
 
-const Header = () => {
+const Header = ({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const navigate = useRouter();
   const pathname = usePathname();
   return (
@@ -12,7 +16,7 @@ const Header = () => {
       </Link>
       <p
         onClick={() => {
-          navigate.push(`${pathname}?open=true`);
+          setOpen(true);
         }}
         className='cursor-pointer text-pink-200'
       >

@@ -10,17 +10,23 @@ const CreateProductModal = ({
   isEditing,
   id,
   setIsEditing,
+  setOpen,
+  product,
 }: {
   isEditing: boolean;
   id: string;
   setIsEditing: React.Dispatch<React.SetStateAction<boolean>>;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  product?: Data;
 }) => {
   const [data, setData] = useState(initialData);
   const [file, setFile] = useState<File | null>(null);
-  const open = useSearchParams().get("open");
+
   const navigate = useRouter();
   const { uploadImage, isUploadingImage } = useUploadImage();
-  let { products } = useGetProductsList();
+  const { products, updateProductsList } = useGetProductsList();
+  console.log(products, "jjj");
+
   const fileRef: React.MutableRefObject<null | HTMLInputElement> = useRef(null);
   const handleChange = (
     e: React.ChangeEvent<
@@ -51,9 +57,10 @@ const CreateProductModal = ({
   };
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    console.log(isEditing);
+
     if (isEditing) {
       const tempProducts = products.filter((product) => product.id !== id);
-      products.splice(0, products.length);
       let newData = {} as Data;
 
       if (file) {
@@ -66,8 +73,8 @@ const CreateProductModal = ({
               image,
               id,
             };
-            products.push(...tempProducts, newData);
-            localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+            const newProducts = [...tempProducts, newData];
+            updateProductsList(newProducts);
           },
         });
         return;
@@ -76,18 +83,24 @@ const CreateProductModal = ({
         ...data,
         id,
       };
-      products.push(...tempProducts, newData);
-      localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+      const newProducts = [...tempProducts, newData];
+      updateProductsList(newProducts);
     } else {
       uploadImage(file, {
         onSuccess: (image) => {
-          products.push({
-            ...data,
-            id: randomBytes(32).toString("hex"),
-            image,
-          });
+          console.log(image);
 
-          localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+          const newProducts = [
+            ...products,
+            {
+              ...data,
+              id: randomBytes(32).toString("hex"),
+              image,
+            },
+          ];
+          console.log(newProducts);
+
+          updateProductsList(newProducts);
         },
       });
     }
@@ -97,20 +110,18 @@ const CreateProductModal = ({
     if (fileRef.current) {
       fileRef.current.value = "";
     }
-    navigate.back();
+    setOpen(false);
+    window.location.reload();
   };
   useEffect(() => {
     if (isEditing) {
-      const product = products.filter((product) => product.id === id);
-
-      setData(product[0]);
+      product && setData(product);
     }
   }, [isEditing, id]);
   return (
     <section
-      className={`fixed z-10 top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black bg-opacity-85  items-center justify-center ${
-        open ? "flex" : "hidden"
-      }`}
+      className={`fixed z-10 top-0 left-0 right-0 bottom-0 w-screen h-screen bg-black bg-opacity-85  items-center justify-center flex
+      `}
     >
       <div className='max-w-2xl w-11/12 min-h-3/4 h-5/6 overflow-y-auto rounded-md bg-purple-800 ring-4 ring-purple-100 px-7 py-6'>
         <h3 className='text-xl text-center font-semibold capitalize  text-purple-100 pb-8'>
@@ -202,7 +213,7 @@ const CreateProductModal = ({
                 if (fileRef.current) {
                   fileRef.current.value = "";
                 }
-                navigate.back();
+                setOpen(false);
                 setIsEditing(false);
                 setData(initialData);
 

@@ -5,34 +5,46 @@ import useGetProductsList from "@/hooks/useGetProductsList";
 import { Data } from "@/utils/constants";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import React, { Suspense, useState } from "react";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import React, { Suspense, useEffect, useMemo, useState } from "react";
 
 const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
   const [isEditing, setIsEditing] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [product, setProduct] = useState<Data[]>([]);
   const navigate = useRouter();
   const pathname = usePathname();
   const { id } = params;
-  let { products } = useGetProductsList();
-
-  const product: Data[] = products.filter((product) => product.id === id);
+  const { products, updateProductsList } = useGetProductsList();
+  console.log(products, "oo");
   const handleDelete = (id: string) => {
     const tempProducts = products.filter((product: Data) => product.id !== id);
     products.splice(0, products.length);
 
     products.push(...tempProducts);
 
-    localStorage.setItem("PRODUCT_LISTS", JSON.stringify(products));
+    updateProductsList(products);
 
     alert("Product Deleted");
   };
+
+  useEffect(() => {
+    const singleProduct = products.filter((product) => product.id === id);
+    console.log(singleProduct, products);
+
+    setProduct(singleProduct);
+  }, [products]);
+  useEffect(() => {
+    console.log("Page", products);
+  }, [products, open]);
+
   if (!id) {
     navigate.back();
   }
   return (
     <Suspense fallback={<p>Loading...</p>}>
       <section className='relative'>
-        <Header />
+        <Header setOpen={setOpen} />
         <div className='container'>
           <Link href={"/"} className='text-pink-200 container px-6'>
             Go Back
@@ -55,7 +67,7 @@ const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
                 <span
                   className='text-green-500'
                   onClick={() => {
-                    navigate.push(`${pathname}/?open=true`);
+                    setOpen(true);
                     setIsEditing(true);
                   }}
                 >
@@ -88,11 +100,15 @@ const SingleProductDisplay = ({ params }: { params: { id: string } }) => {
             </p>
           </div>
         </section>
-        <CreateProductModal
-          setIsEditing={setIsEditing}
-          isEditing={isEditing}
-          id={id}
-        />
+        {open && (
+          <CreateProductModal
+            setIsEditing={setIsEditing}
+            isEditing={isEditing}
+            id={id}
+            setOpen={setOpen}
+            product={product[0]}
+          />
+        )}
       </section>
     </Suspense>
   );

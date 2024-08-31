@@ -1,14 +1,16 @@
 "use client";
 import CreateProductModal from "../components/CreateProductModal";
 import { defaultProducts } from "../utils/constants";
-import { Suspense, useEffect } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Header from "../components/Header";
 import Hero from "@/components/Hero";
 import Filters from "@/components/Filters";
 import SingleProduct from "@/components/SingleProduct";
 import useHandleFiltering from "@/hooks/useHandleFiltering";
+import useGetProductsList from "@/hooks/useGetProductsList";
 
 export default function Home() {
+  const [open, setOpen] = useState(false);
   const {
     handleFiltering,
     filteredProducts,
@@ -18,9 +20,12 @@ export default function Home() {
     price,
     setFilteredProducts,
   } = useHandleFiltering();
+
+  const { products } = useGetProductsList();
   useEffect(() => {
+    setFilteredProducts(products);
     handleFiltering();
-  }, [category, price]);
+  }, [category, price, setFilteredProducts]);
   useEffect(() => {
     if (window !== undefined) {
       const alreadySet = localStorage.getItem("PRODUCT_LISTS");
@@ -36,9 +41,8 @@ export default function Home() {
   return (
     <Suspense fallback={<p>Loading..</p>}>
       <section className='relative'>
-        <Header />
+        <Header setOpen={setOpen} />
         <Hero />
-
         <section className='mt-7 container'>
           <h1 className='text-2xl font-semibold my-4 capitalize underline  text-center text-purple-200'>
             Our Products
@@ -56,7 +60,14 @@ export default function Home() {
             })
           )}
         </section>
-        <CreateProductModal isEditing={false} id={""} setIsEditing={() => {}} />
+        {open && (
+          <CreateProductModal
+            isEditing={false}
+            id={""}
+            setIsEditing={() => {}}
+            setOpen={setOpen}
+          />
+        )}{" "}
       </section>
     </Suspense>
   );
