@@ -33,8 +33,10 @@ export default function Home() {
       if (alreadySet) {
         let products = JSON.parse(alreadySet);
         setFilteredProducts(products);
+        setProducts((prev) => {
+          return products;
+        });
         setUpdate(false);
-        window.location.reload();
       } else {
         localStorage.setItem("PRODUCT_LISTS", JSON.stringify(defaultProducts));
         setUpdate(true);
