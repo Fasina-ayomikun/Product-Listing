@@ -3,12 +3,10 @@ import React, { useEffect, useState } from "react";
 
 const useGetProductsList = () => {
   const [products, setProducts] = useState<Data[]>([]);
-  const [refresh, setRefresh] = useState(false);
   useEffect(() => {
     if (window !== undefined) {
       let rawProducts = localStorage.getItem("PRODUCT_LISTS");
       let products = rawProducts ? JSON.parse(rawProducts) : [];
-      console.log("products", products);
 
       setProducts((prev) => {
         return [...products];

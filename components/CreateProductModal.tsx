@@ -1,7 +1,7 @@
 import { randomBytes } from "crypto";
 import Image from "next/image";
-import { useRouter, useSearchParams } from "next/navigation";
-import React, { Suspense, useEffect, useRef, useState } from "react";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useRef, useState } from "react";
 import { Data, initialData } from "../utils/constants";
 import { useUploadImage } from "@/hooks/useUploadingImage";
 import useGetProductsList from "@/hooks/useGetProductsList";

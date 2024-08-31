@@ -7,11 +7,9 @@ import Hero from "@/components/Hero";
 import Filters from "@/components/Filters";
 import SingleProduct from "@/components/SingleProduct";
 import useHandleFiltering from "@/hooks/useHandleFiltering";
-import useGetProductsList from "@/hooks/useGetProductsList";
 
 export default function Home() {
   const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
   const {
     handleFiltering,
     filteredProducts,
@@ -22,7 +20,6 @@ export default function Home() {
     setFilteredProducts,
   } = useHandleFiltering();
 
-  const { products, updateProductsList, setProducts } = useGetProductsList();
   useEffect(() => {
     handleFiltering();
   }, [category, price]);
