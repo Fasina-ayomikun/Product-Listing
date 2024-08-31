@@ -28,7 +28,7 @@ const useGetProductsList = () => {
     });
   };
 
-  return { products, updateProductsList };
+  return { products, updateProductsList, setProducts };
 };
 
 export default useGetProductsList;
