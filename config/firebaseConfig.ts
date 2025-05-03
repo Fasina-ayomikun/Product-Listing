@@ -1,10 +1,10 @@
 const firebaseConfig = {
-  apiKey: "AIzaSyAZa3McxIFC63Ce7zxDw1VZ9kemQVN_yWE",
-  authDomain: "unichat-7e411.firebaseapp.com",
-  projectId: "unichat-7e411",
-  storageBucket: "unichat-7e411.appspot.com",
-  messagingSenderId: "834891631263",
-  appId: "1:834891631263:web:2db1ff1629ca7808c5f0aa",
+  apiKey: process.env.NEXT_PUBLIC_API_KEY,
+  authDomain: process.env.NEXT_PUBLIC_AUTH_DOMAIN,
+  projectId: process.env.NEXT_PUBLIC_PROJECT_ID,
+  storageBucket: process.env.NEXT_PUBLIC_STORAGE_BUCKET,
+  messagingSenderId: process.env.NEXT_PUBLIC_MESSAGING_SENDERID,
+  appId: process.env.NEXT_PUBLIC_APPID,
 };
 
 export default firebaseConfig;
